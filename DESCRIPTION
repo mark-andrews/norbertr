@@ -1,0 +1,25 @@
+Package: norbertr
+Title: Some Tools for Analysing the Drift Diffusion Model
+Version: 0.0.0.9000
+Authors@R: 
+    person("Mark", "Andrews", , "mark.andrews@ntu.ac.uk", role = c("aut", "cre"))
+Description: Some tools for simulating and analysing the probability distributions of
+    a drift diffusion.
+License: GPL (>= 3)
+Encoding: UTF-8
+Roxygen: list(markdown = TRUE)
+RoxygenNote: 7.1.2
+Suggests: 
+    knitr,
+    rmarkdown,
+    testthat (>= 3.0.0)
+Config/testthat/edition: 3
+Imports: 
+    Rcpp,
+    purrr (>= 0.3.4),
+    ggplot2 (>= 3.3.5),
+    magrittr,
+    tibble
+LinkingTo: 
+    Rcpp
+VignetteBuilder: knitr

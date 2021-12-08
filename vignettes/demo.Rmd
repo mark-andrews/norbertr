@@ -1,0 +1,61 @@
+---
+title: "Some Tools for Understanding Drift Diffusion Models"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Some Tools for Understanding Drift Diffusion Models}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  message = FALSE,
+  warning = FALSE,
+  comment = "#>"
+)
+```
+
+```{r setup}
+library(ggplot2)
+library(dplyr)
+library(norbertr)
+```
+
+## Simulating a drift diffusion model
+
+Here, we draw 10000 samples from a drift diffusion model with relative starting point $b = 0.5$, inter-barrier distance $a = 2$, and drift rate of $v = 0.5$.
+In this model, we assume a non-decision time period of 0.
+```{r}
+ddm_sims <- simulate_ddm(10000, b = 0.5, a = 2, v = 0.5)
+```
+
+Here, a histogram of response times for each choice.
+In typical style, we plot the times corresponding to choices of 0 using negative times.
+```{r, fig.width=6, fig.align='center'}
+ddm_sims %>% 
+  mutate(time = if_else(choice == 1, time, -time)) %>% 
+  ggplot(aes(x = time, fill = factor(choice))) + 
+  geom_histogram(bins = 100, position = 'identity') +
+  xlim(-5, 5) +
+  theme_classic()
+```
+
+## Bivariate density of response time and response choice
+
+The bivariate density of any given response time and either one of the two alternative choices, given values for $b$, $a$, and $v$, i.e.
+$$
+\mathrm{P}(t, x \vert b, a, v)
+$$
+is calculated with `time_choice_density`.
+For example, the probability density of a response time of $2.5$ and choice of $1$ given the above parameter values is
+```{r}
+time_choice_density(t = 2.5, b = 0.5, a = 2, v = 0.5, choice = 1)
+```
+On the other hand, the probability density of a response time of $1.5$ and choice of $0$ given the above parameter values is
+```{r}
+time_choice_density(t = 1.5, b = 0.5, a = 2, v = 0.5, choice = 0)
+```
+
+
+
