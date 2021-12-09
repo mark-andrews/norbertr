@@ -1,0 +1,49 @@
+---
+title: "Bayesian inference of a drift diffusion model"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Bayesian inference of a drift diffusion model}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>",
+  message = FALSE,
+  warning = FALSE
+)
+```
+
+Here's a Stan model for inferring the relative starting point, drift rate and inter-barrier distance of the drift diffusion model. 
+This assumes those three values are fixed, though unknown.
+In other words, those values do not vary with predictor variables.
+In practice, of course, we want these parameters to vary with predictors as in a typical regression model.
+This model is intended as just a simple demo of inference in a non-regression model drift diffusion model.
+```{r, results='asis', comment='', echo=FALSE}
+cat('```stan\n')
+cat(readLines(system.file("stan", "ddm.stan", package = 'norbertr')), sep='\n')
+cat('```')
+```
+
+This model is called by `norbertr::ddm_stan`.
+Here it is in practice.
+
+```{r, results='hide'}
+library(norbertr)
+library(tidyverse)
+
+set.seed(10101)
+
+sims_df <- simulate_ddm(1000, b = 0.75, a = 2, v = 0.5) %>%
+  dplyr::mutate(time = time + 0.1)
+
+M <- ddm_stan(time + choice ~ 1, data = sims_df, cores = 4)
+```
+
+And the results:
+```{r}
+M
+```
+

@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Bivariate density of response time and choice in a drift-diffusion model — time_choice_density • norbertr</title>
+<title>Bayesian inference of a brift diffusion model — ddm_stan • norbertr</title>
 
 
 <!-- jquery -->
@@ -39,9 +39,8 @@
 
 
 
-<meta property="og:title" content="Bivariate density of response time and choice in a drift-diffusion model — time_choice_density" />
-<meta property="og:description" content="The bivariate distribution over response time and choice, when choice is 0,
-is given by Eq (1) in the Appendix of Wabersich &amp;amp; Vandekerckhove (2014)." />
+<meta property="og:title" content="Bayesian inference of a brift diffusion model — ddm_stan" />
+<meta property="og:description" content="Bayesian inference of a brift diffusion model" />
 
 
 
@@ -119,66 +118,69 @@ is given by Eq (1) in the Appendix of Wabersich &amp;amp; Vandekerckhove (2014).
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>Bivariate density of response time and choice in a drift-diffusion model</h1>
+    <h1>Bayesian inference of a brift diffusion model</h1>
     
-    <div class="hidden name"><code>time_choice_density.Rd</code></div>
+    <div class="hidden name"><code>ddm_stan.Rd</code></div>
     </div>
 
     <div class="ref-description">
-    <p>The bivariate distribution over response time and choice, when choice is 0,
-is given by Eq (1) in the Appendix of Wabersich &amp; Vandekerckhove (2014).</p>
+    <p>Bayesian inference of a brift diffusion model</p>
     </div>
 
-    <pre class="usage"><span class='fu'>time_choice_density</span><span class='op'>(</span><span class='va'>t</span>, <span class='va'>b</span>, <span class='va'>a</span>, <span class='va'>v</span>, choice <span class='op'>=</span> <span class='fl'>1</span><span class='op'>)</span></pre>
+    <pre class="usage"><span class='fu'>ddm_stan</span><span class='op'>(</span><span class='va'>formula</span>, <span class='va'>data</span>, tau <span class='op'>=</span> <span class='fl'>0.1</span>, alpha_ub <span class='op'>=</span> <span class='fl'>5</span>, sigma <span class='op'>=</span> <span class='fl'>2</span>, <span class='va'>...</span><span class='op'>)</span></pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
-      <th>t</th>
-      <td><p>time</p></td>
+      <th>formula</th>
+      <td><p>A formula of the kind <code>y + z ~ 1</code></p></td>
     </tr>
     <tr>
-      <th>b</th>
-      <td><p>Relative starting point</p></td>
+      <th>data</th>
+      <td><p>A data frame with response times and response choices</p></td>
     </tr>
     <tr>
-      <th>a</th>
-      <td><p>Upper boundary</p></td>
+      <th>tau</th>
+      <td><p>The non-decision time</p></td>
     </tr>
     <tr>
-      <th>v</th>
-      <td><p>Drift rate</p></td>
+      <th>alpha_ub</th>
+      <td><p>The upper bound on the uniform prior on alpha</p></td>
     </tr>
     <tr>
-      <th>choice</th>
-      <td><p>A binary choice represented as 0 and 1</p></td>
+      <th>sigma</th>
+      <td><p>The standard deviation of the normal prior on delta</p></td>
+    </tr>
+    <tr>
+      <th>...</th>
+      <td><p>Arguments passed to <code><a href='https://mc-stan.org/rstan/reference/stanmodel-method-sampling.html'>rstan::sampling</a></code> (e.g. chains, cores)</p></td>
     </tr>
     </table>
 
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
-    <p>A probability density</p>
-    <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
-
-    <p>The bivariate distribution over response time and choice, when choice is 1,
-is given by Eq (1) in the Appendix of Wabersich &amp; Vandekerckhove (2014) by
-replacing beta by 1 - beta, and replace delta by -delta.</p>
-<p>Here, we implement this density using the method described by Navarro &amp; Fuss
-(2009). This first approximates the density in a DDM with drift 0 and
-inter-barrier distance (a) of 1 for time t/a^2, and then re-scales this.</p>
-    <h2 class="hasAnchor" id="references"><a class="anchor" href="#references"></a>References</h2>
-
-    <p>Wabersich, D., &amp; Vandekerckhove, J. (2014). The RWiener Package: an R Package
-Providing Distribution Functions for the Wiener Diffusion Model. R Journal,
-6(1).</p>
-<p>Navarro, D. J., &amp; Fuss, I. G. (2009). Fast and accurate calculations for
-first-passage times in Wiener diffusion models. Journal of mathematical
-psychology, 53(4), 222-230.</p>
+    <p>A stan model with MCMC samples</p>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><span class='r-in'><span class='fu'>time_choice_density</span><span class='op'>(</span>t<span class='op'>=</span><span class='fl'>1</span>, b<span class='op'>=</span><span class='fl'>0.5</span>, a <span class='op'>=</span> <span class='fl'>2</span>, v <span class='op'>=</span> <span class='fl'>1</span><span class='op'>)</span></span>
-<span class='r-out co'><span class='r-pr'>#&gt;</span> [1] 0.3770339</span>
+    <pre class="examples"><span class='r-in'><span class='fu'><a href='https://rdrr.io/r/base/Random.html'>set.seed</a></span><span class='op'>(</span><span class='fl'>10101</span><span class='op'>)</span></span>
+<span class='r-in'><span class='va'>sims_df</span> <span class='op'>&lt;-</span> <span class='fu'><a href='simulate_ddm.html'>simulate_ddm</a></span><span class='op'>(</span><span class='fl'>1000</span>, b <span class='op'>=</span> <span class='fl'>0.75</span>, a <span class='op'>=</span> <span class='fl'>2</span>, v <span class='op'>=</span> <span class='fl'>0.5</span><span class='op'>)</span> <span class='op'><a href='%>%.html'>%&gt;%</a></span></span>
+<span class='r-in'>    <span class='fu'>dplyr</span><span class='fu'>::</span><span class='fu'><a href='https://dplyr.tidyverse.org/reference/mutate.html'>mutate</a></span><span class='op'>(</span>time <span class='op'>=</span> <span class='va'>time</span> <span class='op'>+</span> <span class='fl'>0.1</span><span class='op'>)</span></span>
+<span class='r-in'><span class='fu'>ddm_stan</span><span class='op'>(</span><span class='va'>time</span> <span class='op'>+</span> <span class='va'>choice</span> <span class='op'>~</span> <span class='fl'>1</span>, data <span class='op'>=</span> <span class='va'>sims_df</span>, cores <span class='op'>=</span> <span class='fl'>4</span>, refresh <span class='op'>=</span> <span class='fl'>0</span><span class='op'>)</span></span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> Inference for Stan model: ddm.</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> 4 chains, each with iter=2000; warmup=1000; thin=1; </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> post-warmup draws per chain=1000, total post-warmup draws=4000.</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>          mean se_mean   sd    2.5%     25%     50%     75%   97.5% n_eff Rhat</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> alpha    1.99    0.00 0.04    1.92    1.97    1.99    2.02    2.08  2021    1</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> beta     0.74    0.00 0.01    0.73    0.74    0.74    0.75    0.76  1755    1</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> delta    0.47    0.00 0.05    0.38    0.43    0.47    0.50    0.56  1759    1</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> lp__  -705.94    0.03 1.28 -709.17 -706.50 -705.62 -705.03 -704.50  1784    1</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> Samples were drawn using NUTS(diag_e) at Fri Dec 10 14:29:24 2021.</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> For each parameter, n_eff is a crude measure of effective sample size,</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> and Rhat is the potential scale reduction factor on split chains (at </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> convergence, Rhat=1).</span>
 </pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">

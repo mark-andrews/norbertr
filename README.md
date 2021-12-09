@@ -12,13 +12,13 @@ drawing samples from a drift-diffusion model.
 
 ## Installation
 
-You can install the development version of norbertr like so:
+You can install the development version of `norbertr` like so:
 
 ``` r
 devtools::install_github('mark-andrews/norbertr')
 ```
 
-This package uses C++ code.
+This package uses Stan, rstan, and C++ code.
 
 ## Example
 

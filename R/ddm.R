@@ -151,3 +151,68 @@ dchoice <- function(b, a, v, choice = 1) {
 }
 
 
+
+#' Bayesian inference of a brift diffusion model
+#'
+#' @param formula A formula of the kind `y + z ~ 1`
+#' @param data A data frame with response times and response choices
+#' @param tau The non-decision time
+#' @param alpha_ub The upper bound on the uniform prior on alpha
+#' @param sigma The standard deviation of the normal prior on delta
+#' @param ... Arguments passed to `rstan::sampling` (e.g. chains, cores)
+#'
+#' @return A stan model with MCMC samples
+#' @export
+#'
+#' @examples
+#' set.seed(10101)
+#' sims_df <- simulate_ddm(1000, b = 0.75, a = 2, v = 0.5) %>%
+#'     dplyr::mutate(time = time + 0.1)
+#' ddm_stan(time + choice ~ 1, data = sims_df, cores = 4, refresh = 0)
+ddm_stan <- function(formula, data, tau = 0.1, alpha_ub = 5, sigma = 2, ...){
+
+  if (!formula.tools::is.two.sided(formula) ) {
+    stop(sprintf('The formula should be two-sided, e.g. x + y ~ 1, not %s.'),
+         as.character(formula))
+  }
+
+  if (formula.tools::rhs(formula) != 1) {
+    stop(sprintf("The rhs of the formula can only be '1' in the current implementation"))
+  }
+
+  lhs_vars <- formula.tools::lhs.vars(formula)
+
+  if (length(lhs_vars) != 2){
+    stop(sprintf("There must be two variables on the lhs of the formula"))
+  }
+
+  # the first var on lhs is the response time variable
+  # it must be numeric and non-negative
+  y <- dplyr::pull(data, lhs_vars[1])
+
+  if (!is.numeric(y) | any(y < 0)) {
+    stop(sprintf("The first variable on lhs must be the response time; numeric and non-negative"))
+  }
+
+  # the second var on lhs is the choice
+  # for now is must be numeric with values of exactly 0 or 1
+  # For future versions, we will accept character vectors, or logical vectors, or factor vectors too
+  z <- dplyr::pull(data, lhs_vars[2])
+
+  if (!is.numeric(z) | !all(sort(unique(z)) == c(0, 1))) {
+    stop(sprintf("The second var on lhs must be the response choice; numeric with values of either 0 or 1"))
+  }
+
+  # sample size
+  n <- nrow(data)
+
+  stan_data = list(z = z,
+                   y = y,
+                   n = n,
+                   tau = 0.1,
+                   alpha_ub = 5,
+                   sigma = 2)
+
+  rstan::sampling(stanmodels$ddm, data = stan_data, ...)
+
+}
