@@ -152,7 +152,7 @@ dchoice <- function(b, a, v, choice = 1) {
 
 
 
-#' Bayesian inference of a brift diffusion model
+#' Bayesian inference of a drift diffusion model
 #'
 #' @param formula A formula of the kind `y + z ~ 1`
 #' @param data A data frame with response times and response choices

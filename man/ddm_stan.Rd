@@ -2,7 +2,7 @@
 % Please edit documentation in R/ddm.R
 \name{ddm_stan}
 \alias{ddm_stan}
-\title{Bayesian inference of a brift diffusion model}
+\title{Bayesian inference of a drift diffusion model}
 \usage{
 ddm_stan(formula, data, tau = 0.1, alpha_ub = 5, sigma = 2, ...)
 }
@@ -23,7 +23,7 @@ ddm_stan(formula, data, tau = 0.1, alpha_ub = 5, sigma = 2, ...)
 A stan model with MCMC samples
 }
 \description{
-Bayesian inference of a brift diffusion model
+Bayesian inference of a drift diffusion model
 }
 \examples{
 set.seed(10101)
